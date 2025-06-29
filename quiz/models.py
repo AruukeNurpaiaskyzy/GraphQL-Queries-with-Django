@@ -6,7 +6,7 @@ class Category (models.Model):
     name  = models.CharField(max_length=255)
     def __str__(self):
         return self.name
-class Quizess (models.Model):
+class Quizzes (models.Model):
     title = models.CharField(max_length=255, default=_("New quiz"))
     category = models.ForeignKey(Category, default = 1, on_delete = models.DO_NOTHING)
     date_created = models.DateTimeField(auto_now_add = True)
@@ -15,5 +15,37 @@ class Quizess (models.Model):
         return self.title
 
 class Question(models.Model):
+    SCALE = (
+        (0, _("Fundamental")),
+        (1, _("Beginner")),
+        (2, _("Intermediate")),
+        (3, _("Advanced")),
+        (4, _("Expert"))
+    )
+
+    TYPE = (
+        (0, _('Multiple Choice')),
+    )
+    quiz = models.ForeignKey(
+        Quizzes, related_name = "questions", on_delete = models.DO_NOTHING)
+    technique = models.IntegerField(
+        choices = TYPE, default = 0, verbose_name=_("Type of Question"))
+    title = models.CharField(max_length=255, verbose_name=_("Title"))
+    defficulty = models.IntegerField(
+        choices=SCALE, default=0, verbose_name=_("Difficulty"))
+    date_created = models.DateTimeField(
+        auto_now_add = True, verbose_name =_("Date Created"))
+    is_active = models.Boolean.Field(
+        default = False, verbose_name = _("Active Status"))
+    def __str__(self):
+        return self.title
 
 class Answer(models.Model):
+    question = models.ForeignKey(
+        Question, related_name = 'answers', on_delete = models.DO_NOTHING)
+    answer_text = models.CharField(
+        max_length=255, verbose_name =_("Answer Text"))
+    is_right = models.BooleanField(default = False)
+    
+    def __str__(self):
+        return self.answer_text
