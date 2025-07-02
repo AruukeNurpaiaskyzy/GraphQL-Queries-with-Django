@@ -35,7 +35,7 @@ class Question(models.Model):
         choices=SCALE, default=0, verbose_name=_("Difficulty"))
     date_created = models.DateTimeField(
         auto_now_add = True, verbose_name =_("Date Created"))
-    is_active = models.Boolean.Field(
+    is_active = models.BooleanField(
         default = False, verbose_name = _("Active Status"))
     def __str__(self):
         return self.title
